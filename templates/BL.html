@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalesPro - Sales Prediction Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>SalesPro</span>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#"><i class="fas fa-box"></i> Inventory</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <p>© 2023 SalesPro</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="sidebar-toggle" class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Sales Prediction Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff" alt="Admin">
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="grid-container">
+                    <!-- Prediction Form Card -->
+                    <div class="card prediction-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-calculator"></i>
+                                <h2>Unit Sales Predictor</h2>
+                            </div>
+                            <p class="card-description">Enter product details to predict sales volume</p>
+                        </div>
+                        <div class="card-body">
+                            <form id="prediction-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="store_id">Store ID</label>
+                                        <input type="number" id="store_id" name="store_id" placeholder="Enter store ID" required>
+                                        <p class="form-hint">Enter a valid store identifier</p>
+                                        <p class="error-message" id="store_id_error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sku_id">SKU ID</label>
+                                        <input type="number" id="sku_id" name="sku_id" placeholder="Enter SKU ID" required>
+                                        <p class="form-hint">Enter a valid SKU identifier</p>
+                                        <p class="error-message" id="sku_id_error"></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="total_price">Total Price ($)</label>
+                                        <input type="number" id="total_price" name="total_price" step="0.01" placeholder="Enter total price" required>
+                                        <p class="form-hint">Enter the total price in USD</p>
+                                        <p class="error-message" id="total_price_error"></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="base_price">Base Price ($)</label>
+                                        <input type="number" id="base_price" name="base_price" step="0.01" placeholder="Enter base price" required>
+                                        <p class="form-hint">Enter the base price in USD</p>
+                                        <p class="error-message" id="base_price_error"></p>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group radio-group">
+                                        <label>Is Featured SKU</label>
+                                        <div class="radio-options">
+                                            <div class="radio-option">
+                                                <input type="radio" id="featured_yes" name="is_featured_sku" value="1">
+                                                <label for="featured_yes">Yes</label>
+                                            </div>
+                                            <div class="radio-option">
+                                                <input type="radio" id="featured_no" name="is_featured_sku" value="0" checked>
+                                                <label for="featured_no">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group radio-group">
+                                        <label>Is Display SKU</label>
+                                        <div class="radio-options">
+                                            <div class="radio-option">
+                                                <input type="radio" id="display_yes" name="is_display_sku" value="1">
+                                                <label for="display_yes">Yes</label>
+                                            </div>
+                                            <div class="radio-option">
+                                                <input type="radio" id="display_no" name="is_display_sku" value="0" checked>
+                                                <label for="display_no">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" id="predict-button">
+                                    <i class="fas fa-calculator"></i>
+                                    <span>Predict Sales</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Prediction Result Card (Hidden by default) -->
+                    <div class="card result-card" id="result-card" style="display: none;">
+                        <div class="card-header accent">
+                            <div class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                <h2>Prediction Result</h2>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="result-content">
+                                <div class="prediction-value">
+                                    <span id="prediction-number">0</span>
+                                    <span class="units">units</span>
+                                </div>
+                                <p class="result-description">Estimated units to be sold based on the provided parameters</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline" id="export-btn">
+                                <i class="fas fa-file-export"></i>
+                                <span>Export</span>
+                            </button>
+                            <button class="btn btn-outline" id="share-btn">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- About Card -->
+                    <div class="card about-card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-info-circle"></i>
+                                <h2>About This Tool</h2>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>This sales prediction tool uses machine learning to estimate the number of units that will be sold based on various factors including pricing and product placement.</p>
+                            <div class="about-buttons">
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-code"></i>
+                                    <span>Source Code</span>
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-bug"></i>
+                                    <span>Report Issue</span>
+                                </button>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-question-circle"></i>
+                                    <span>Help</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <p class="update-info">Last Updated: May 22, 2023</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
